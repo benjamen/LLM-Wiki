@@ -1,0 +1,9 @@
+#!/bin/sh
+# Pre-commit: regenerate the machine catalog, then lint.
+# Blocks the commit only on lint errors (exit 1). Bypass: git commit --no-verify
+if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=py; fi
+
+$PY scripts/wiki_tool.py build || exit 1
+git add wiki/catalog.jsonl
+$PY scripts/wiki_tool.py lint || exit 1
+exit 0
